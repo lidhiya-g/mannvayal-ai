@@ -31,9 +31,9 @@ export async function POST(req: Request) {
         email: email.toLowerCase().trim(),
         phone: phone ? phone.trim() : null,
         passwordHash,
-        preferredLang: preferredLang || "ta",
-        state: state || "Tamil Nadu",
-        district: district || "Thanjavur",
+        preferredLang: preferredLang || "en",
+        state: state || "Punjab",
+        district: district || "Ludhiana",
         isVerified: true,
         consentRecords: {
           create: [

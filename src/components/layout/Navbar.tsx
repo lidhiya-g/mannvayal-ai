@@ -8,16 +8,16 @@ import ThemeLanguageControls from "./ThemeLanguageControls";
 import { Sprout, Menu, X, LayoutDashboard, Sparkles, UserCheck, Shield } from "lucide-react";
 
 export default function Navbar() {
-  const { user, t, logout } = useApp();
+  const { user, t, logout, language } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   const navLinks = [
-    { href: "/", label: t.nav.home },
-    { href: "/features", label: t.nav.features },
-    { href: "/how-it-works", label: t.nav.howItWorks },
-    { href: "/methodology", label: t.nav.methodology },
-    { href: "/about", label: t.nav.about },
+    { href: "/features", label: t.nav.features || "Product" },
+    { href: "/how-it-works", label: t.nav.howItWorks || "Solutions" },
+    { href: "/#explore-india", label: t.nav.exploreIndia || "Explore India" },
+    { href: "/methodology", label: t.nav.climateIntelligence || "Climate Intelligence" },
+    { href: "/about", label: t.nav.about || "About" },
   ];
 
   return (
@@ -37,8 +37,8 @@ export default function Navbar() {
                 AI
               </span>
             </div>
-            <span className="text-[10px] text-gray-500 dark:text-gray-400 font-tamil -mt-1 hidden sm:inline">
-              மண்வயல் • காலநிலை-வேளாண் வழிகாட்டி
+            <span className="text-[10px] text-gray-500 dark:text-gray-400 -mt-0.5 hidden sm:inline">
+              {language === "ta" ? "மண்வயல் • காலநிலை-வேளாண் வழிகாட்டி" : "Pan-India Climate-to-Crop Decision Engine"}
             </span>
           </div>
         </Link>

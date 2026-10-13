@@ -9,6 +9,8 @@ export interface TranslationDictionary {
     about: string;
     features: string;
     howItWorks: string;
+    exploreIndia: string;
+    climateIntelligence: string;
     methodology: string;
     dashboard: string;
     simulator: string;
@@ -128,13 +130,15 @@ export interface TranslationDictionary {
 // English Dictionary
 export const enDict: TranslationDictionary = {
   appName: "MannVayal AI",
-  tagline: "Predict Climate. Protect Crops. Empower Farmers.",
-  taglineTamil: "காலநிலையை கணித்து, பயிர்களை காத்து, விவசாயத்தை வளப்படுத்துவோம்.",
+  tagline: "Smarter Farms. Stronger Villages. A Prosperous Bharat.",
+  taglineTamil: "வளமான உழவர், வலிமையான கிராமங்கள், செழிப்பான பாரதம்.",
   nav: {
     home: "Home",
     about: "About",
     features: "Features",
     howItWorks: "How It Works",
+    exploreIndia: "Explore India",
+    climateIntelligence: "Climate Intelligence",
     methodology: "Methodology",
     dashboard: "Dashboard",
     simulator: "What-If Simulator",
@@ -142,7 +146,7 @@ export const enDict: TranslationDictionary = {
     waterBudget: "Water Wallet",
     timeline: "Rescue Timeline",
     community: "Community Sync",
-    advisor: "Tamil Farm Advisor",
+    advisor: "Farm Advisor",
     memory: "Farm Memory",
     admin: "Admin Center",
     signIn: "Sign In",
@@ -154,16 +158,16 @@ export const enDict: TranslationDictionary = {
     confidence: "Data Confidence",
   },
   hero: {
-    headline: "Turn Climate Uncertainty Into Smarter Farming Decisions.",
-    subheadline: "Predict climate risks, simulate rainfall shocks, minimize decision regret, and manage crop water budgets with India's dedicated agro-climatic intelligence platform.",
-    exploreFarm: "Explore Your Farm",
-    seeHowItWorks: "See How It Works",
+    headline: "Smarter Farms. Stronger Villages. A Prosperous Bharat.",
+    subheadline: "Turn climate and community data into better farming decisions, smarter resource planning, and sustainable rural development across India.",
+    exploreFarm: "Explore Agricultural Intelligence",
+    seeHowItWorks: "Explore Village Development",
     liveIndicator: "Live IMD / Open-Meteo Feed",
     demoIndicator: "Simulated Calibration Mode",
-    badgeText: "Tamil Nadu & Cauvery Delta Decision Engine",
+    badgeText: "Samriddh Annadata, Samriddh Bharat • Agri & Rural Intelligence",
   },
   dashboard: {
-    greeting: "Vanakkam, Farmer",
+    greeting: "Welcome, Farmer",
     farmSelector: "Active Farm",
     currentCrop: "Current Crop",
     stage: "Crop Stage",
@@ -261,6 +265,8 @@ export const taDict: TranslationDictionary = {
     about: "எங்களை பற்றி",
     features: "செயல்பாடுகள்",
     howItWorks: "செயல்முறை",
+    exploreIndia: "இந்திய வரைபடம்",
+    climateIntelligence: "காலநிலை நுண்ணறிவு",
     methodology: "தரவு முறைமை",
     dashboard: "விவசாயி பலகை",
     simulator: "வானிலை பாவனை மாதிரி",
@@ -446,5 +452,37 @@ export const DICTIONARIES: Record<string, TranslationDictionary> = {
 };
 
 export function getDictionary(lang: string = DEFAULT_LANGUAGE): TranslationDictionary {
-  return DICTIONARIES[lang] || DICTIONARIES[DEFAULT_LANGUAGE] || enDict;
+  const dict = DICTIONARIES[lang] || DICTIONARIES[DEFAULT_LANGUAGE] || enDict;
+  return {
+    ...enDict,
+    ...dict,
+    nav: { ...enDict.nav, ...(dict.nav || {}) },
+    hero: { ...enDict.hero, ...(dict.hero || {}) },
+    dashboard: { ...enDict.dashboard, ...(dict.dashboard || {}) },
+    simulator: { ...enDict.simulator, ...(dict.simulator || {}) },
+    common: { ...enDict.common, ...(dict.common || {}) },
+  };
+}
+
+export function checkLanguageCoverage(): { totalLanguages: number; covered: string[]; missingKeysByLang: Record<string, string[]> } {
+  const baseKeys = Object.keys(enDict);
+  const missingKeysByLang: Record<string, string[]> = {};
+
+  for (const [code, dict] of Object.entries(DICTIONARIES)) {
+    const missing: string[] = [];
+    for (const k of baseKeys) {
+      if ((dict as any)[k] === undefined) {
+        missing.push(k);
+      }
+    }
+    if (missing.length > 0) {
+      missingKeysByLang[code] = missing;
+    }
+  }
+
+  return {
+    totalLanguages: Object.keys(DICTIONARIES).length,
+    covered: Object.keys(DICTIONARIES),
+    missingKeysByLang,
+  };
 }

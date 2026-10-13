@@ -7,11 +7,12 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { useApp } from "@/context/AppContext";
 import { SUPPORTED_LANGUAGES } from "@/lib/i18n/languages";
-import { Sprout, User, Mail, Phone, Lock, MapPin, Globe, AlertCircle, ArrowRight } from "lucide-react";
+import LocationExplorer, { SelectedLocation } from "@/components/geo/LocationExplorer";
+import { Sprout, User, Mail, Phone, Lock, Globe, AlertCircle, ArrowRight } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { setUser, setLanguage } = useApp();
+  const { setUser, setLanguage, language } = useApp();
 
   const [form, setForm] = useState({
     fullName: "",
@@ -19,14 +20,22 @@ export default function RegisterPage() {
     phone: "",
     password: "",
     confirmPassword: "",
-    preferredLang: "ta",
-    state: "Tamil Nadu",
-    district: "Thanjavur",
+    preferredLang: language || "en",
+    state: "Punjab",
+    district: "Ludhiana",
     consentAgreed: true,
   });
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const handleLocationChange = (loc: SelectedLocation) => {
+    setForm((prev) => ({
+      ...prev,
+      state: loc.state,
+      district: loc.district,
+    }));
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,7 +78,7 @@ export default function RegisterPage() {
       <Navbar />
 
       <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
-        <div className="w-full max-w-lg space-y-6">
+        <div className="w-full max-w-xl space-y-6">
           <div className="text-center space-y-2">
             <div className="w-12 h-12 rounded-2xl bg-emerald-600 flex items-center justify-center text-white mx-auto shadow-md">
               <Sprout className="w-6 h-6 text-emerald-100" />
@@ -78,7 +87,7 @@ export default function RegisterPage() {
               Create Your Farmer Profile
             </h1>
             <p className="text-xs text-gray-500 dark:text-gray-400">
-              Empower your seasonal decisions with climate-smart simulation
+              Empower your seasonal decisions with Pan-India climate-smart simulation
             </p>
           </div>
 
@@ -101,7 +110,7 @@ export default function RegisterPage() {
                     value={form.fullName}
                     onChange={(e) => setForm({ ...form, fullName: e.target.value })}
                     className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-emerald-900/60 bg-transparent text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    placeholder="e.g. Murugan Selvam"
+                    placeholder="e.g. Harpreet Singh"
                   />
                 </div>
               </div>
@@ -123,7 +132,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold mb-1 text-gray-700 dark:text-gray-300">Phone Number</label>
+                  <label className="block font-semibold mb-1 text-gray-700 dark:text-gray-300">Phone (Optional)</label>
                   <div className="relative">
                     <Phone className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                     <input
@@ -169,46 +178,37 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-700 dark:text-gray-300">Preferred Language</label>
+              {/* Pan-India Location Selector */}
+              <div className="pt-2">
+                <label className="block font-semibold mb-2 text-gray-700 dark:text-gray-300">
+                  Select Primary Agricultural Location (Pan-India) *
+                </label>
+                <LocationExplorer
+                  initialState={form.state}
+                  initialDistrict={form.district}
+                  onChange={handleLocationChange}
+                  compact={true}
+                  showCardSummary={false}
+                />
+              </div>
+
+              {/* Preferred Language */}
+              <div>
+                <label className="block font-semibold mb-1 text-gray-700 dark:text-gray-300">
+                  Preferred Language (13 Indian Languages)
+                </label>
+                <div className="relative">
+                  <Globe className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
                   <select
                     value={form.preferredLang}
                     onChange={(e) => setForm({ ...form, preferredLang: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-emerald-900/60 bg-white dark:bg-[#111A14] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-300 dark:border-emerald-900/60 bg-white dark:bg-[#111A14] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   >
                     {SUPPORTED_LANGUAGES.map((l) => (
                       <option key={l.code} value={l.code}>
-                        {l.nativeName}
+                        {l.nativeName} ({l.name})
                       </option>
                     ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-700 dark:text-gray-300">State</label>
-                  <input
-                    type="text"
-                    value={form.state}
-                    onChange={(e) => setForm({ ...form, state: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-emerald-900/60 bg-transparent text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-semibold mb-1 text-gray-700 dark:text-gray-300">District</label>
-                  <select
-                    value={form.district}
-                    onChange={(e) => setForm({ ...form, district: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-xl border border-gray-300 dark:border-emerald-900/60 bg-white dark:bg-[#111A14] text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                  >
-                    <option value="Thanjavur">Thanjavur (தஞ்சாவூர்)</option>
-                    <option value="Tiruvarur">Tiruvarur (திருவாரூர்)</option>
-                    <option value="Nagapattinam">Nagapattinam (நாகப்பட்டினம்)</option>
-                    <option value="Madurai">Madurai (மதுரை)</option>
-                    <option value="Coimbatore">Coimbatore (கோயம்புத்தூர்)</option>
-                    <option value="Tirunelveli">Tirunelveli (திருநெல்வேலி)</option>
-                    <option value="Salem">Salem (சேலம்)</option>
                   </select>
                 </div>
               </div>
@@ -230,14 +230,14 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 rounded-xl font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm flex items-center justify-center gap-2 transition-all mt-4"
+                className="w-full py-3 rounded-xl font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md shadow-emerald-900/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50"
               >
-                {loading ? "Registering Account..." : "Continue to Farm Setup"}
+                {loading ? "Creating Profile..." : "Register Farmer Account"}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
 
-            <div className="pt-5 mt-5 border-t border-gray-100 dark:border-emerald-950 text-center text-xs text-gray-500">
+            <div className="mt-6 text-center text-xs text-gray-500 dark:text-gray-400">
               Already have an account?{" "}
               <Link href="/login" className="font-semibold text-emerald-600 dark:text-emerald-400 hover:underline">
                 Sign In

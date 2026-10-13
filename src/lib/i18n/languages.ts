@@ -22,4 +22,4 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
   { code: "ur", name: "Urdu", nativeName: "اردو", dir: "rtl" },
 ];
 
-export const DEFAULT_LANGUAGE = "ta"; // Tamil-first as instructed
+export const DEFAULT_LANGUAGE = "en"; // English-first by default across all routes

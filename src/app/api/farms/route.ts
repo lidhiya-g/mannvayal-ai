@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { name, district, village, totalArea, soilType, irrigationType, primaryCropCode, sowingDate } = body;
+    const { name, state, district, village, totalArea, soilType, irrigationType, primaryCropCode, sowingDate, latitude, longitude } = body;
 
     if (!name || !totalArea || !soilType || !primaryCropCode) {
       return NextResponse.json({ error: "Missing required farm parameters" }, { status: 400 });
@@ -58,9 +58,11 @@ export async function POST(req: Request) {
       data: {
         userId: session.id,
         name: name.trim(),
-        state: "Tamil Nadu",
-        district: district || session.district || "Thanjavur",
+        state: state || (session as any).state || "Punjab",
+        district: district || (session as any).district || "Ludhiana",
         village: village || null,
+        latitude: latitude ? parseFloat(latitude) : null,
+        longitude: longitude ? parseFloat(longitude) : null,
         totalArea: parseFloat(totalArea),
         soilType,
         irrigationType: irrigationType || "Canal & Borewell",

@@ -46,6 +46,7 @@ module.exports = {
           green: "#16A34A",
           forest: "#064E3B",
           emerald: "#10B981",
+          lime: "#A3E635",
           gold: "#F4B740",
           dark: "#080D0A",
           darkCard: "#111A14",

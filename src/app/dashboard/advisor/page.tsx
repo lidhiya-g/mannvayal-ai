@@ -39,14 +39,14 @@ export default function FarmAdvisorPage() {
       ? [
           "பருவமழை தாமதமானால் என்ன மாற்றுப்பயிர் செய்யலாம்?",
           "காய்ச்சலும் பாய்ச்சலும் (AWD) பாசனம் எப்படி செய்வது?",
-          "நெல் பயிரில் குருத்துப்பூச்சி தாக்குதலை தடுப்பது எப்படி?",
-          "கருக்கட்டும் பருவத்தில் நீர் பற்றாக்குறை வந்தால் என்ன செய்வது?",
+          "ஜல் ஜீவன் இயக்கத்தின் கீழ் கிராம குடிநீர் குழாய் இணைப்பு வழிகாட்டுதல் என்ன?",
+          "கிராம வளர்ச்சி முன்னுரிமை கணிப்பான் எவ்வாறு கணக்கிடுகிறது?",
         ]
       : [
           "What contingency crops work best if monsoon is delayed?",
           "How do I practice Alternate Wetting and Drying (AWD)?",
-          "What are the integrated defenses against yellow stem borer?",
-          "What should I prepare for during panicle initiation stage?",
+          "What is the Jal Jeevan Mission rural drinking water mandate?",
+          "How does the Village Development Priority Planner calculate composite scores?",
         ];
 
   const handleAsk = async (queryText?: string) => {

@@ -167,6 +167,100 @@ export const VERIFIED_AGRO_KNOWLEDGE: QuestionPattern[] = [
       disclaimer: "மருந்து தெளிப்பதற்கு முன் உள்ளூர் வேளாண் அலுவலரிடம் ஆலோசனை பெறவும்.",
     },
   },
+  {
+    keywords: ["village", "panchayat", "drinking", "jal jeevan", "jjm", "குடிநீர்", "பஞ்சாயத்து"],
+    responseEn: {
+      answer: "Under the Jal Jeevan Mission (Har Ghar Jal), every rural household is entitled to a functional household tap connection delivering 55 litres per capita per day (lpcd) of potable drinking water. Gram Panchayats utilize 15th Finance Commission tied grants and State Jal Shakti allocations to extend feeder pipes to unserved outer hamlets and install chlorination units.",
+      language: "en",
+      explanationChain: [
+        "1. JJM benchmark: 100% household tap connectivity matching BIS:10500 potable standards.",
+        "2. Funding: 60% tied grant under XV Finance Commission allocations for rural local bodies.",
+        "3. Village Water & Sanitation Committee (VWSC) leads local operation, maintenance, and water quality testing.",
+      ],
+      assumptions: [
+        "Habitation has an active multi-village or groundwater source with safe fluoride and TDS levels.",
+      ],
+      uncertaintyLevel: "LOW",
+      suggestedNextSteps: [
+        "Audit unserved households in the Gram Panchayat register.",
+        "Pass a VWSC resolution in the Gram Sabha for pipeline extension.",
+        "Track the project timeline in the MannVayal Village Priority Planner.",
+      ],
+      dataSources: [
+        { title: "Jal Jeevan Mission Operational Guidelines", publisher: "Department of Drinking Water & Sanitation, Ministry of Jal Shakti", year: "2024" },
+        { title: "XV Finance Commission Local Body Grant Manual", publisher: "Ministry of Panchayati Raj", year: "2023" },
+      ],
+      disclaimer: "Administrative advisory. Civil works require formal Gram Sabha approval and technical sanction from the Block Assistant Engineer.",
+    },
+    responseTa: {
+      answer: "ஜல் ஜீவன் இயக்கத்தின் (Har Ghar Jal) கீழ், ஒவ்வொரு கிராமப்புற வீட்டிற்கும் நாளொன்றுக்கு தனிநபர் ஒருவருக்கு 55 லிட்டர் பாதுகாப்பான குடிநீர் குழாய் இணைப்பு வழங்கப்பட வேண்டும். கிராம ஊராட்சிகள் 15வது நிதிக்குழுவின் குடிநீர் ஒதுக்கீட்டு நிதியைப் பயன்படுத்தி விடுபட்ட குடியிருப்புகளுக்கு குழாய் விரிவாக்கம் மற்றும் மேல்நிலை நீர்த்தேக்க தொட்டி பணிகளை மேற்கொள்ளலாம்.",
+      language: "ta",
+      explanationChain: [
+        "1. தேசிய இலக்கு: 100% வீட்டு குடிநீர் குழாய் இணைப்பு.",
+        "2. நிதி ஆதாரங்கள்: 15வது நிதிக்குழு tied grant மற்றும் மாநில குடிநீர் திட்டங்கள்.",
+        "3. கிராம குடிநீர் மற்றும் சுகாதார குழு (VWSC) பராமரிப்பை மேற்கொள்ளும்.",
+      ],
+      assumptions: [
+        "நிலத்தடி நீர் ஆதாரம் குடிநீருக்கு உகந்ததாக உள்ளது.",
+      ],
+      uncertaintyLevel: "LOW",
+      suggestedNextSteps: [
+        "கிராம சபை கூட்டத்தில் விடுபட்ட வீடுகளுக்கான தீர்மானம் நிறைவேற்றவும்.",
+        "மண்வயல் கிராம வளர்ச்சி முன்னுரிமை பலகையில் இத்தேவையை பதிவு செய்யவும்.",
+      ],
+      dataSources: [
+        { title: "ஜல் ஜீவன் இயக்க வழிகாட்டு நெறிமுறைகள்", publisher: "மத்திய ஜல் சக்தி அமைச்சகம்", year: "2024" },
+      ],
+      disclaimer: "வழிகாட்டல் மட்டுமே. திட்ட மதிப்பீட்டிற்கு வட்டார வளர்ச்சி அலுவலரை (BDO) அணுகவும்.",
+    },
+  },
+  {
+    keywords: ["priority", "planner", "ranking", "gpdp", "முன்னுரிமை", "திட்டம்"],
+    responseEn: {
+      answer: "The MannVayal Village Development Priority Planner ranks infrastructure and community needs using an open, transparent formula: Composite Score = (Urgency × 0.40) + (Community Impact × 0.40) + (Feasibility × 0.20), rated on a 1.0 to 5.0 scale. This aligns village works with the Gram Panchayat Development Plan (GPDP) and Mission Antyodaya gap criteria.",
+      language: "en",
+      explanationChain: [
+        "1. Urgency (40% weight): Reflects acute health/safety risks (e.g. contaminated drinking water, damaged road).",
+        "2. Community Impact (40% weight): Counts proportion of village population directly benefited.",
+        "3. Feasibility (20% weight): Assesses administrative clearance ease and available scheme budgets.",
+      ],
+      assumptions: [
+        "Scores are configured collaboratively by Gram Panchayat members and community stakeholders.",
+      ],
+      uncertaintyLevel: "LOW",
+      suggestedNextSteps: [
+        "Record community needs in the B4 Priority Planner tab.",
+        "Export the CSV Priority Report to present at the next Gram Sabha meeting.",
+        "Assign responsible departments and target completion months.",
+      ],
+      dataSources: [
+        { title: "Guidelines for Preparation of GPDP", publisher: "Ministry of Panchayati Raj, Govt of India", year: "2023" },
+        { title: "Mission Antyodaya Framework", publisher: "Ministry of Rural Development", year: "2024" },
+      ],
+      disclaimer: "The priority score is a decision-support aid and does not supersede statutory Gram Sabha legislative powers.",
+    },
+    responseTa: {
+      answer: "மண்வயல் கிராம வளர்ச்சி முன்னுரிமை கணிப்பான் பின்வரும் எளிய சூத்திரத்தைப் பயன்படுத்துகிறது: முன்னுரிமை மதிப்பு = (அவசரம் × 0.40) + (சமூக பயன் × 0.40) + (சாத்தியக்கூறு × 0.20) [1 முதல் 5 புள்ளிகள்]. இது கிராம ஊராட்சி வளர்ச்சித் திட்டத்தில் (GPDP) நிதி ஒதுக்கீட்டை பாரபட்சமின்றி திட்டமிட உதவுகிறது.",
+      language: "ta",
+      explanationChain: [
+        "1. அவசரம் (40%): பொது சுகாதாரம் மற்றும் அவசர தேவைகளை அளவிடுகிறது.",
+        "2. சமூக பயன் (40%): பயன்பெறும் மக்கள் தொகையின் விகிதத்தை குறிக்கிறது.",
+        "3. சாத்தியக்கூறு (20%): நிதி மற்றும் தொழில்நுட்ப சாத்தியத்தை குறிக்கிறது.",
+      ],
+      assumptions: [
+        "கிராம மக்களின் கருத்துக்கள் மற்றும் ஊராட்சி ஆவணங்களின் அடிப்படையில் கணக்கிடப்படுகிறது.",
+      ],
+      uncertaintyLevel: "LOW",
+      suggestedNextSteps: [
+        "கிராம முன்னுரிமை திட்டமிடல் பக்கத்தில் புதிய தேவைகளை பதிவு செய்யவும்.",
+        "அறிக்கையை பதிவிறக்கம் செய்து கிராம சபை கூட்டத்தில் சமர்ப்பிக்கவும்.",
+      ],
+      dataSources: [
+        { title: "கிராம ஊராட்சி வளர்ச்சித் திட்ட நெறிமுறைகள்", publisher: "மத்திய பஞ்சாயத்து ராஜ் அமைச்சகம்", year: "2023" },
+      ],
+      disclaimer: "முடிவெடுக்கும் வழிகாட்டி மட்டுமே. இறுதி முடிவு கிராம சபைக்கு உட்பட்டது.",
+    },
+  },
 ];
 
 export async function askTamilFarmAdvisor(
