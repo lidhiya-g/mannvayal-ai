@@ -1,0 +1,258 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. User & Authentication
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  phone         String?   @unique
+  fullName      String
+  passwordHash  String
+  role          String    @default("FARMER") // FARMER, ADVISOR, COMMUNITY_ADMIN, PLATFORM_ADMIN
+  preferredLang String    @default("ta")
+  isVerified    Boolean   @default(true)
+  otpCode       String?
+  otpExpiresAt  DateTime?
+  state         String    @default("Tamil Nadu")
+  district      String    @default("Thanjavur")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  farms             Farm[]
+  journalEntries    FarmJournalEntry[]
+  farmOutcomes      FarmOutcome[]
+  auditEvents       AuditEvent[]
+  communityMember   CommunityMembership?
+  supportRequests   SupportRequest[]
+  consentRecords    ConsentRecord[]
+}
+
+// 2. User Profile & Preferences
+model ConsentRecord {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purpose     String   // "COMMUNITY_SHARING", "RESEARCH_ANALYTICS", "SMS_ALERTS"
+  granted     Boolean  @default(false)
+  updatedAt   DateTime @default(now())
+}
+
+// 3. Farms & Farm Memberships
+model Farm {
+  id              String   @id @default(uuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name            String
+  state           String   @default("Tamil Nadu")
+  district        String   @default("Thanjavur")
+  village         String?
+  latitude        Float?
+  longitude       Float?
+  totalArea       Float    // in acres
+  soilType        String   // Clay Loam, Sandy Loam, Red Soil, Black Cotton Soil, Alluvial
+  irrigationType  String   // Canal, Borewell, Drip, Sprinkler, Rainfed
+  waterCapacityM3 Float?   // Optional pond / well storage capacity
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  cropCycles        CropCycle[]
+  weatherCache      WeatherObservation[]
+  climateScenarios  ClimateScenario[]
+  waterBudgets      WaterBudget[]
+  journalEntries    FarmJournalEntry[]
+  outcomes          FarmOutcome[]
+}
+
+// 4. Crop Catalog & Reference Database
+model CropCatalog {
+  id                String   @id @default(uuid())
+  code              String   @unique // PADDY, RAGI, COTTON, GROUNDNUT, MAIZE, SUGARCANE, RED_GRAM
+  nameEnglish       String
+  nameTamil         String
+  category          String   // Cereals, Millets, Oilseeds, Cash, Pulses
+  durationDays      Int
+  waterRequirementMm Float   // total season mm (e.g. Paddy: 1200mm, Ragi: 450mm)
+  droughtTolerance  String   // LOW, MEDIUM, HIGH, VERY_HIGH
+  heatTolerance     String   // LOW, MEDIUM, HIGH
+  suitableSoils     String   // JSON or comma-separated
+  descriptionEn     String
+  descriptionTa     String
+  baselineYieldKgPerAcre Float
+  baselineCostPerAcre   Float
+  baselinePricePerKg    Float
+
+  cropStages        CropStageCatalog[]
+  cropCycles        CropCycle[]
+}
+
+model CropStageCatalog {
+  id             String      @id @default(uuid())
+  cropCode       String
+  crop           CropCatalog @relation(fields: [cropCode], references: [code], onDelete: Cascade)
+  stageOrder     Int
+  stageNameEn    String
+  stageNameTa    String
+  startDay       Int
+  endDay         Int
+  waterNeedPct   Float       // percentage of total water requirement consumed in this stage
+  criticality    String      // LOW, MEDIUM, CRITICAL
+  vulnerabilities String     // Drought, Waterlogging, Heat stress
+}
+
+// 5. Active Crop Cycle per Farm
+model CropCycle {
+  id              String      @id @default(uuid())
+  farmId          String
+  farm            Farm        @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  cropCode        String
+  crop            CropCatalog @relation(fields: [cropCode], references: [code])
+  season          String      // Kuruvai, Samba, Thaladi, Navarai, Kharif, Rabi
+  sowingDate      DateTime
+  expectedHarvest DateTime
+  currentStage    String      @default("Sowing")
+  areaAllocated   Float       // in acres
+  status          String      @default("ACTIVE") // ACTIVE, COMPLETED, ABANDONED
+
+  rescueTasks     RescueTask[]
+}
+
+// 6. Rescue Tasks & Contingency Guidance
+model RescueTask {
+  id             String    @id @default(uuid())
+  cropCycleId    String
+  cropCycle      CropCycle @relation(fields: [cropCycleId], references: [id], onDelete: Cascade)
+  stageName      String
+  titleEn        String
+  titleTa        String
+  descriptionEn  String
+  descriptionTa  String
+  priority       String    @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  isCompleted    Boolean   @default(false)
+  completedAt    DateTime?
+  triggeredBy    String    @default("SCHEDULE") // SCHEDULE, DROUGHT_ALERT, HEAT_ALERT, EXCESS_RAIN
+  createdAt      DateTime  @default(now())
+}
+
+// 7. Weather Observations & Forecast Cache
+model WeatherObservation {
+  id            String   @id @default(uuid())
+  farmId        String
+  farm          Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  source        String   @default("OPEN_METEO_IMD_REFERENCE")
+  recordedAt    DateTime @default(now())
+  temperatureC  Float
+  tempMaxC      Float
+  tempMinC      Float
+  humidityPct   Float
+  precipitationMm Float
+  forecastDaysJson String // JSON string of 7-day forecast
+  isSimulated   Boolean  @default(false)
+}
+
+// 8. Climate Scenarios & What-If Simulations
+model ClimateScenario {
+  id                String   @id @default(uuid())
+  farmId            String
+  farm              Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  scenarioName      String
+  cropCode          String
+  rainfallAnomalyPct Float   // -50% to +50%
+  tempAnomalyC      Float    // 0 to +5 C
+  drySpellDays      Int      // 0 to 30 days
+  delayedSowingDays Int      // 0 to 45 days
+  riskScore         Float    // 0 to 100
+  estimatedWaterDeficitMm Float
+  yieldImpactPct    Float    // -100% to +20%
+  recommendationsJson String // JSON array of advice
+  createdAt         DateTime @default(now())
+}
+
+// 9. Water Budgets & Allocations
+model WaterBudget {
+  id                  String   @id @default(uuid())
+  farmId              String
+  farm                Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  periodName          String
+  availableSupplyM3   Float
+  effectiveRainfallM3 Float
+  cropDemandM3        Float
+  netBalanceM3        Float    // Supply + Rain - Demand
+  deficitPercentage   Float
+  mitigationStrategy  String
+  createdAt           DateTime @default(now())
+}
+
+// 10. Community Sowing Sharing (Aggregated, Anonymized)
+model CommunityMembership {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  district       String
+  blockOrTaluk   String
+  isConsented    Boolean  @default(true)
+  optedInAt      DateTime @default(now())
+}
+
+// 11. Farm Journal & Outcomes (Resilience Memory)
+model FarmJournalEntry {
+  id         String   @id @default(uuid())
+  farmId     String
+  farm       Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entryDate  DateTime @default(now())
+  title      String
+  content    String
+  category   String   // IRRIGATION, OBSERVATION, PEST_MONITORING, WEATHER_EVENT, SOWING
+  notes      String?
+}
+
+model FarmOutcome {
+  id             String   @id @default(uuid())
+  farmId         String
+  farm           Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seasonYear     String
+  cropCode       String
+  plannedYieldKg Float
+  actualYieldKg  Float
+  plannedCostInr Float
+  actualCostInr  Float
+  harvestPricePerKg Float
+  actualRainfallDescription String?
+  keyLearnings   String?
+  farmerFeedback String?
+  createdAt      DateTime @default(now())
+}
+
+// 12. System Audit & Admin Logging
+model AuditEvent {
+  id          String   @id @default(uuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  eventType   String   // LOGIN, FARM_CREATED, SCENARIO_RUN, ADMIN_ACTION
+  severity    String   @default("INFO")
+  description String
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+}
+
+model SupportRequest {
+  id          String   @id @default(uuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name        String
+  email       String
+  phone       String?
+  subject     String
+  message     String
+  status      String   @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED
+  createdAt   DateTime @default(now())
+}
