@@ -130,8 +130,8 @@ export interface TranslationDictionary {
 // English Dictionary
 export const enDict: TranslationDictionary = {
   appName: "MannVayal AI",
-  tagline: "Smarter Farms. Stronger Villages. A Prosperous Bharat.",
-  taglineTamil: "வளமான உழவர், வலிமையான கிராமங்கள், செழிப்பான பாரதம்.",
+  tagline: "Smarter Farms. Stronger Villages.",
+  taglineTamil: "வளமான உழவர், வலிமையான கிராமங்கள்.",
   nav: {
     home: "Home",
     about: "About",
@@ -158,13 +158,13 @@ export const enDict: TranslationDictionary = {
     confidence: "Data Confidence",
   },
   hero: {
-    headline: "Smarter Farms. Stronger Villages. A Prosperous Bharat.",
-    subheadline: "Turn climate and community data into better farming decisions, smarter resource planning, and sustainable rural development across India.",
-    exploreFarm: "Explore Agricultural Intelligence",
-    seeHowItWorks: "Explore Village Development",
+    headline: "Make Every Farming Decision Smarter.",
+    subheadline: "Understand climate risks, plan crops confidently, assess rural resources, and support sustainable village development with data-driven insights.",
+    exploreFarm: "Explore the Platform",
+    seeHowItWorks: "View Village Dashboard",
     liveIndicator: "Live IMD / Open-Meteo Feed",
     demoIndicator: "Simulated Calibration Mode",
-    badgeText: "Samriddh Annadata, Samriddh Bharat • Agri & Rural Intelligence",
+    badgeText: "AI-Powered Agriculture & Rural Intelligence",
   },
   dashboard: {
     greeting: "Welcome, Farmer",

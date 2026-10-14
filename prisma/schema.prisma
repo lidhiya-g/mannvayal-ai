@@ -15,7 +15,7 @@ model User {
   fullName      String
   passwordHash  String
   role          String    @default("FARMER") // FARMER, ADVISOR, COMMUNITY_ADMIN, PLATFORM_ADMIN
-  preferredLang String    @default("ta")
+  preferredLang String    @default("en")
   isVerified    Boolean   @default(true)
   otpCode       String?
   otpExpiresAt  DateTime?

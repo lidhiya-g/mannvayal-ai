@@ -12,6 +12,8 @@ export interface UserSession {
   preferredLang: string;
   state?: string;
   district?: string;
+  isVerified?: boolean;
+  createdAt?: string;
 }
 
 export interface Farm {
@@ -113,8 +115,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         const data = await res.json();
         if (data.user) {
           setUser(data.user);
-          if (data.user.preferredLang) {
-            setLanguage(data.user.preferredLang);
+          // Only apply the user's stored language preference if:
+          // 1. They have explicitly set a non-English language (not the default "en")
+          // 2. There is no existing explicit localStorage selection already
+          // This prevents the DB default from overriding a user's manual selection
+          const existingLangPreference = localStorage.getItem("mv_lang");
+          if (data.user.preferredLang && data.user.preferredLang !== "en") {
+            // User has explicitly chosen a non-English language in their profile
+            // Apply it only if they haven't manually changed the language in this session
+            if (!existingLangPreference) {
+              setLanguage(data.user.preferredLang);
+            }
           }
           if (data.user.farms && data.user.farms.length > 0) {
             setFarms(data.user.farms);
